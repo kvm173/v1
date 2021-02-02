@@ -2,6 +2,10 @@
 
 // Для работы со шлагбаумом, умеет работать с двумя типами контроллеров
 // SNR-ERD-2.0, SN-ERD-PROject2
+define("SYSLOG_SERVER","10.154.192.23");
+define("SYSLOG_SERVER_PORT",514);
+define("SYSLOG_ENABLE",true);
+
 Class Gates
 {
   protected $ip_gate;
@@ -23,6 +27,10 @@ Class Gates
           $this->group=$group;
           $msg="";
 
+if(SYSLOG_ENABLE)
+{
+send_remote_syslog("sent signal to ".$this->ip_gate." type ".$this->type);
+}
           if($this->type== 1) // SNR-ERD-PROject2
           {
             $url="http://".$this->ip_gate."/checkpassword.cgi?psw_check=".$this->pass;
@@ -75,7 +83,7 @@ Class Gates
 
         }
 
-        private function get_curl($uu,&$msg,$fcookie)
+        private function get_curl($uu,&$msg,$fcookie='')
         {
 
            $ch = curl_init($uu);
@@ -100,4 +108,12 @@ Class Gates
 
 }
 
-?>
+function send_remote_syslog($message, $component = "api_gate", $program = "php_domophon_system_api") {
+  $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+  foreach(explode("\n", $message) as $line) {
+    $syslog_message = date('M d H:i:s ') . $program . ' ' . $component . ': ' . $line;
+    socket_sendto($sock, $syslog_message, strlen($syslog_message), 0, SYSLOG_SERVER, SYSLOG_SERVER_PORT);
+  }
+  socket_close($sock);
+}
+
