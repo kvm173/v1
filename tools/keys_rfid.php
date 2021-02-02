@@ -23,15 +23,15 @@ $in_key='0000350076D7C3';
 
   $kr = new Keys_Rfid($ip_dom, $apart);
 
-  if($action=== "list") 
+  if($action=== "list")
   {
     $kr->list();
   }
-  elseif($action=== "add") 
+  elseif($action=== "add")
   {
     $kr->add($in_key);
   }
-  elseif($action=== "del") 
+  elseif($action=== "del")
   {
     $kr->del($in_key);
   }
