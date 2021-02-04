@@ -16,8 +16,8 @@ $group=$_POST["group"]; // группа контактов для импульс
 $ip_gate='10.154.192.17';
 $type=1;  // 1= SNR-ERD-PROject2; 2= SNR-ERD-2.0
 $pass='public';
-$timeout=2;
-$group=6; // группа контактов для импульса замыкания-размыкания
+$timeout=10;
+$group=""; // группа контактов для импульса замыкания-размыкания
 */
 
   $cg= new Gates($ip_gate, $type, $pass, $timeout);
