@@ -19,28 +19,32 @@ $filename = '/tmp/action.txt';
  $in_json= json_encode($_POST);
  $auth=db_get_dom_acc($id);
 
+ file_put_contents($filename, "acc==$auth==$ip_addr==$id==\n", FILE_APPEND);
 
  switch($action)
  {
    case "OpenDoor":
      $ch = curl_init("http://$auth@$ip_addr/cgi-bin/intercom_cgi?action=maindoor"); // such as http://example.com/example.xml
      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,3);
      curl_setopt($ch, CURLOPT_HEADER, 0);
      $data = curl_exec($ch);
+     $resp=  curl_getinfo($ch,CURLINFO_RESPONSE_CODE);
      $data = str_replace(array("\r\n", "\r", "\n"), '', $data);     
      curl_close($ch);
 //     echo "$data";
         if ($data === "OK")  
         { 
-          $out_json= json_encode(array("action"=> "OpenDoor", "id"=> $id, "data"=> array("answer"=> "OK") ));
-
+//          $out_json= json_encode(array("action"=> "OpenDoor", "id"=> $id, "data"=> array("answer"=> "OK") ));
+          $out_json= json_encode(array("data"=>"OK","status"=>200) );
         }
         else 
         {
-          $out_json= json_encode(array("action"=> "OpenDoor", "id"=> $id, data=> array("answer"=> "ERROR") ));
+//          $out_json= json_encode(array("action"=> "OpenDoor", "id"=> $id, data=> array("answer"=> "ERROR") ));
+          $out_json= json_encode(array("status"=>$resp,"error_message"=> $data));
         }
          echo $out_json;
-         $qq= "insert into public.events (dt,id_domophon,id_user,in_json,out_json,comment,action) values (now(),$id,$id_user,'$in_json','$out_json','','$action');";
+         $qq= "insert into public.events (dt,id_domophon,id_user,out_json,comment,action,event_type) values (now(),$id,$id_user,'$out_json','','$action',1);";
          db_insert_event($qq);
    break;
  }

@@ -37,6 +37,7 @@ $id_user=0;
     $_SESSION["sip_server"]=$rs["sip_server"];
     $_SESSION["sip_user"]=$rs["sip_user"];
     $_SESSION["sip_pass"]=$rs["sip_pass"];
+    $_SESSION["sip_wss"]=$rs["sip_wss"];
     $id=$rs[0];
     $comment="login success";
 //    file_put_contents($filename, "more than 0 records $rs $id login=$login auth_token=$auth_token\n", FILE_APPEND);
@@ -51,7 +52,7 @@ $id_user=0;
     $out_json= json_encode(array("status"=> "401", "data"=> array("answer"=> "error")));
   }
 echo $out_json;
-$qq= "insert into public.events (dt,id_user,in_json,out_json,comment,action,event_type) values (now(),$id_user,'$in_json','$out_json','$comment','login',1);";
+$qq= "insert into public.events (dt,id_user,out_json,comment,action,event_type) values (now(),$id_user,'$out_json','$comment','login',1);";
 db_insert_event($qq);
 
 ?>

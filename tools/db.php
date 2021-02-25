@@ -7,6 +7,26 @@ function db_insert_event($query)
   $qr= pg_query($dbconn, $query);
   pg_close($dbconn);
 }
+function db_update_event($query)
+{
+  return db_insert_event($query);
+}
+
+function db_select_more_col($query)
+{
+  $conn_string= "host=localhost port=5432 dbname='dom' user='postgres' password='postgres'";
+  $dbconn= pg_connect($conn_string);
+  $qr= pg_query($dbconn, $query);
+  $rs= pg_fetch_array($qr,NULL,PGSQL_NUM);
+  pg_close($dbconn);
+  return $rs;
+}
+
+function db_select_one_col($query)
+{
+  $rs= db_select_more_col($query);
+  return $rs[0];
+}
 
 function db_get_dom_acc($id)
 {
@@ -80,6 +100,30 @@ function db_get_id_cam_forpost($id)
   $rs= pg_fetch_array($qr,NULL,PGSQL_NUM);
   pg_close($dbconn);
   return $rs[0];
+}
+
+function db_get_dom_from_mac($mac)
+{
+  $conn_string= "host=localhost port=5432 dbname='dom' user='postgres' password='postgres'";
+  $dbconn= pg_connect($conn_string);
+  $id=0;
+  $query="SELECT id FROM public.domophons where lower(mac_addr)='$mac';";
+  $qr= pg_query($dbconn, $query);
+  $rs= pg_fetch_array($qr,NULL,PGSQL_NUM); if ($rs) { $id=$rs[0];}
+  pg_close($dbconn);
+  return $id;
+}
+
+function db_get_user_from_sip($sip)
+{
+  $conn_string= "host=localhost port=5432 dbname='dom' user='postgres' password='postgres'";
+  $dbconn= pg_connect($conn_string);
+  $id=0;
+  $query="SELECT id FROM public.users where sip_user='$sip';";
+  $qr= pg_query($dbconn, $query);
+  $rs= pg_fetch_array($qr,NULL,PGSQL_NUM); if ($rs) { $id=$rs[0];}
+  pg_close($dbconn);
+  return $id;
 }
 
 ?>

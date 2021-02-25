@@ -18,6 +18,8 @@ Class Gates
   protected $group; // электрическая группа контатов присоединенная на разъеме контроллера  1...[max]
   protected $timeout;
 
+  public $out_json;  
+
         function __construct($ip_gate,$type,$pass,$timeout=self::DEFAULT_TIMEOUT)
         {
           $this->ip_gate= $ip_gate;
@@ -90,14 +92,14 @@ send_remote_syslog("sent signal to ".$this->ip_gate." type ".$this->type);
 
           if ($rcurl== 200)
           {
-             $out_json= json_encode(array("data"=>"OK","status"=>200));
+             $this->out_json= json_encode(array("data"=>"OK","status"=>200));
           }
           else
           {
-             $out_json= json_encode(array("status"=>$rcurl,"error_message"=> $msg));
+             $this->out_json= json_encode(array("status"=>$rcurl,"error_message"=> $msg));
           }
 
-          echo "$out_json";
+          echo "$this->out_json";
 
         }
 
