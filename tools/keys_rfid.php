@@ -14,11 +14,11 @@ $apart=$_POST["apart"];
 // $apart=$_SESSION["appart"];
 // */
 /*
-$action='add';
-$id_dom=1;
-$ip_dom='10.154.192.21';
+$action='list';
+$id_dom=5;
+$ip_dom='10.154.192.2';
 $apart=100;
-$in_key='0000350076D7C3';
+$in_key='220350076D7C3';
 */
 
   $kr = new Keys_Rfid($ip_dom, $apart);
